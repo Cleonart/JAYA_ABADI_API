@@ -8,10 +8,8 @@ from Universal.table import tbl
 class FormBarang(Resource):
 
 	def get(self, id):
-		input_group = []
-		option      = []
 
-		barang_id            = random.randint(10000,99999)
+		barang_id            = "B" + str(random.randint(1000000,9999999))
 		barang_nama          = ""
 		barang_kategori      = ""
 		barang_merek         = ""
@@ -21,22 +19,20 @@ class FormBarang(Resource):
 		barang_harga_beli    = ""
 		barang_harga_jual    = ""
 
-		if id != "baru":	
-			print("Custom Data")
+		if id != "baru":
 			sql = "SELECT * FROM `barang` WHERE `barang_id` = '{}'".format(id)
 			json_data = connExecute(sql)
 			if len(json_data) > 0:
 				json_data            = json_data[0]
 				barang_id            = json_data['barang_id']
-				barang_nama          = json_data['barang_nama'].upper()
+				barang_nama          = json_data['barang_nama'].title()
 				barang_merek         = json_data['barang_merek']
 				barang_kategori      = json_data['barang_kategori']
-				barang_varian        = json_data['barang_varian'].upper()
+				barang_varian        = json_data['barang_varian']
 				barang_satuan_eceran = json_data['barang_satuan_eceran']
 				barang_satuan_grosir = json_data['barang_satuan_grosir']
 				barang_harga_beli    = json_data['barang_harga_beli']
 				barang_harga_jual    = json_data['barang_harga_jual']
-			print(json_data)
 
 		barang = form(barang_id)
 		barang.add_text("Nama Barang", "Masukan Nama Barang", barang_nama)
@@ -47,7 +43,11 @@ class FormBarang(Resource):
 		barang.add_select("Satuan Grosir", "Satuan Grosir Barang", opt.satuan(), barang_satuan_grosir)
 		barang.add_text("Harga Beli", "Masukan Harga Beli", barang_harga_beli)
 		barang.add_text("Harga Jual", "Masukan Harga Jual", barang_harga_jual)
-		print(barang.get())
+
+		if id == "baru":
+			barang.add_text("Stok Awal Toko", "Masukan Stok Awal", "")
+			barang.add_text("Stok Awal Gudang", "Masukan Stok Awal Gudang", "")
+		
 		return barang.get()
 
 	def post(self, id):
@@ -98,9 +98,9 @@ class TabelBarang(Resource):
 		list_data  = []
 		for data in table_list:
 			table_data = tbl(data['barang_id'])
-			table_data.add_field_badge(data['kategori_nama'])
-			table_data.add_field_text(data['barang_nama'])
-			table_data.add_field_text(data['merek_nama'])
+			table_data.add_field_badge(data['kategori_nama'].title())
+			table_data.add_field_text(data['barang_nama'].title())
+			table_data.add_field_text(data['merek_nama'].title())
 			table_data.add_field_text(data['barang_varian'])
 			table_data.add_field_price(data['barang_harga_jual'])
 			table_data.add_field_text(data['barang_stok_toko'])
