@@ -7,6 +7,7 @@ from Master.Pengguna import FormPengguna, TabelPengguna
 from Master.Pelanggan import FormPelanggan, TabelPelanggan
 from Master.Supplier import FormSupplier, TabelSupplier
 from Pembelian.form import FormPembelian
+from Pembelian.form import TabelPembelian
 from Pengaturan.Satuan import FormSatuan, TabelSatuan
 from Pengaturan.Kategori import FormKategori, TabelKategori
 from Pengaturan.Merek import FormMerek, TabelMerek
@@ -35,8 +36,9 @@ api.add_resource(TabelPelanggan, "/master/pelanggan/tabel")
 api.add_resource(FormPengguna, "/master/pengguna/form/<string:id>");
 api.add_resource(TabelPengguna, "/master/pengguna/tabel")
 
-# Pengaturan [Satuan]
-api.add_resource(FormPembelian, "/pembelian/order/<string:id>");
+# Pembelian
+api.add_resource(FormPembelian, "/pembelian/order");
+api.add_resource(TabelPembelian, "/pembelian")
 
 # Pengaturan [Satuan]
 api.add_resource(FormSatuan, "/pengaturan/satuan/form/<string:id>");

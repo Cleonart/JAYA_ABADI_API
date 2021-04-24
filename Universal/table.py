@@ -24,8 +24,14 @@ class tbl():
 			'text' : text
 		})
 
+	def add_field_badge_danger(self, text=""):
+		self.table_group.append({ 
+			'type' : "badge_danger",  
+			'text' : text
+		})
+
 	def add_field_price(self, text=""):
 		self.table_group.append({
-			'type' : "badge",  
+			'type' : "price",  
 			'text' : text
 		})

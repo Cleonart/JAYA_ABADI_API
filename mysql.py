@@ -1,5 +1,5 @@
 import pymysql.cursors
-		
+
 def conn():
 	"""Make connection to mysql"""
 	conn = pymysql.connect(host='localhost',
