@@ -16,9 +16,7 @@ app = Flask(__name__)
 api = Api(app)
 
 CORS(app)
-cors = CORS(app, resources = {
-		r"/*" : { "origin" : "*" }
-	   })
+cors = CORS(app, resources = {r"/*" : { "origin" : "*" }})
 
 # Master Data [Barang]
 api.add_resource(FormBarang, "/master/barang/form/<string:id>");
