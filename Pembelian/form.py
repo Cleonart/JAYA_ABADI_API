@@ -1,45 +1,25 @@
+from functions import Options, Table, generateId
 from flask_restful import Resource,request
 from mysql import connExecute
 import random
-from Universal.options import opt
 from Universal.form import form
 from Universal.table import tbl
 
 class FormPembelian(Resource):
 
-	def get(self):
+	def get(self, id):
 		json_data = {}
-
-		json_data['data_supplier'] = {}
-		temporary_data = connExecute("SELECT * FROM `master_supplier`")
-		for data in temporary_data:
-			json_data['data_supplier'][data['supplier_id']] = "{}".format(data['supplier_nama'])
-
-		data_product_sql = ""
-		data_product_sql += "SELECT `barang_id`,`barang_nama`,`merek_nama`,`kategori_nama`,`barang_varian` FROM `barang` as a "
-		data_product_sql += "INNER JOIN `merek` as b "
-		data_product_sql += "ON `barang_merek` = `merek_id` "
-		data_product_sql += "INNER JOIN `kategori` as c "
-		data_product_sql += "ON `barang_kategori` = `kategori_id`"
-		temporary_data = connExecute(data_product_sql)
-
-		json_data['data_product'] = {}
-		for data in temporary_data:
-			json_data['data_product'][data['barang_id']] = "[{}] {} - {} {}".format(data['kategori_nama'],data['merek_nama'],data['barang_nama'],data['barang_varian'])
-		
-		temporary_data = connExecute("SELECT * FROM `satuan`")
-		json_data['data_satuan']  = {}
-		for data in temporary_data:
-			json_data['data_satuan'][data['satuan_id']] = "{}".format(data['satuan_nama'])	
-
+		json_data['data_supplier'] = Options.objectDataSupplier()
+		json_data['data_product']  = Options.objectDataBarang()
+		json_data['data_satuan']   = Options.objectDataSatuan()
 		return json_data
 
-	def post(self):
+	def post(self, id):
 		data = request.get_json()
-		pembelian_id                  = data['pembelian_id']
+		pembelian_id = data['pembelian_id']
 
-		if(pembelian_id == ""):
-			pembelian_id   = "INV" + str(random.randint(100000,999999))
+		if pembelian_id == "":
+			pembelian_id = generateId("INV")
 
 		pembelian_supplier_id         = data['pembelian_supplier_id']
 		pembelian_tanggal             = data['pembelian_tanggal']
@@ -71,6 +51,18 @@ class FormPembelian(Resource):
 		sql += "`pembelian_total`                = '{}',".format(pembelian_total)
 		sql += "`pembelian_status`               = '{}'".format(pembelian_status)
 		execs = connExecute(sql)
+
+		# Delete all previous item
+		sql = "DELETE FROM `pembelian_item` WHERE `pembelian_id` = '{}'".format(pembelian_id)
+		connExecute(sql)
+
+		# Registering all item
+		for item in pembelian_item:
+			sql  = "INSERT INTO `pembelian_item` "
+			sql += "(`pembelian_id`, `barang_id`, `barang_satuan`, "
+			sql += "`barang_jumlah`, `barang_harga`, `barang_total`) "
+			sql += "VALUES ('{}', '{}', '{}', '{}', '{}', '{}')".format(pembelian_id, item['barang_id'], item['barang_satuan'], int(item['barang_jumlah']), int(item['barang_harga']), int(item['barang_total']))
+			connExecute(sql)
 		return execs
 
 class TabelPembelian(Resource):

@@ -6,23 +6,24 @@ def set_value(label, value):
 def get_value(table_name):
 	return connExecute("SELECT * FROM " + table_name)
 
-class opt():
+class option():
 
 	def kategori():
-		"""Option list for kategori"""
+		""" Option list for kategori """
 		option = []
 		for option_ in get_value('kategori'):
 			option.append(set_value(option_['kategori_nama'].upper(), option_['kategori_id']))
 		return option
 
 	def merek():
-		"""Option list for merek"""
+		""" Option list for merek """
 		option = []
 		for option_ in get_value('merek'):
 			option.append(set_value(option_['merek_nama'].upper(), option_['merek_id']))
 		return option
 
 	def satuan():
+		""" Option list for satuan """
 		option = []
 		for option_ in get_value('satuan'):
 			option.append(set_value(option_['satuan_nama'].upper(), option_['satuan_id']))
@@ -55,7 +56,8 @@ class opt():
 
 	def objectDataSupplier():
 		json_data = {}
-		temporary_data = connExecute("SELECT * FROM `master_supplier`")
+		temporary_data = connExecute("SELECT * FROM `master_supplier` WHERE `supplier_nama` != 'UMUM'")
+		json_data['SUPGENERAL'] = "UMUM"
 		for data in temporary_data:
 			json_data[data['supplier_id']] = "{}".format(data['supplier_nama'])
 		return json_data

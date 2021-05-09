@@ -1,15 +1,12 @@
+from functions import Form, Options, Table, generateId
 from flask_restful import Resource,request
 from mysql import connExecute
-import random
-from Universal.options import opt
-from Universal.form import form
-from Universal.table import tbl
 
 class FormBarang(Resource):
 
 	def get(self, id):
 
-		barang_id            = "B" + str(random.randint(1000000,9999999))
+		barang_id            = generateId("B")
 		barang_nama          = ""
 		barang_kategori      = ""
 		barang_merek         = ""
@@ -34,13 +31,13 @@ class FormBarang(Resource):
 				barang_harga_beli    = json_data['barang_harga_beli']
 				barang_harga_jual    = json_data['barang_harga_jual']
 
-		barang = form(barang_id)
+		barang = Form(barang_id)
 		barang.add_text("Nama Barang", "Masukan Nama Barang", barang_nama)
-		barang.add_select("Kategori", "Masukan Kategori", opt.kategori(), barang_kategori)
-		barang.add_select("Merek", "Masukan Nama Merek", opt.merek(), barang_merek)
+		barang.add_select("Kategori", "Masukan Kategori", Options.kategori(), barang_kategori)
+		barang.add_select("Merek", "Masukan Nama Merek", Options.merek(), barang_merek)
 		barang.add_text("Varian Barang", "Masukan Varian Barang", barang_varian)
-		barang.add_select("Satuan Eceran", "Satuan Eceran Barang", opt.satuan(), barang_satuan_eceran)
-		barang.add_select("Satuan Grosir", "Satuan Grosir Barang", opt.satuan(), barang_satuan_grosir)
+		barang.add_select("Satuan Eceran", "Satuan Eceran Barang", Options.satuan(), barang_satuan_eceran)
+		barang.add_select("Satuan Grosir", "Satuan Grosir Barang", Options.satuan(), barang_satuan_grosir)
 		barang.add_text("Harga Beli", "Masukan Harga Beli", barang_harga_beli)
 		barang.add_text("Harga Jual", "Masukan Harga Jual", barang_harga_jual)
 
@@ -51,8 +48,8 @@ class FormBarang(Resource):
 		return barang.get()
 
 	def post(self, id):
-		data = request.get_json()
 
+		data 				 = request.get_json()
 		barang_id            = data[0]['value']
 		barang_nama          = data[1]['value']
 		barang_kategori      = data[2]['value']
@@ -82,9 +79,7 @@ class FormBarang(Resource):
 		sql += "`barang_satuan_grosir` = '{}',".format(barang_satuan_grosir)
 		sql += "`barang_harga_beli`    = '{}',".format(barang_harga_beli)
 		sql += "`barang_harga_jual`    = '{}'".format(barang_harga_jual)
-
-		execs = connExecute(sql)
-		return execs
+		return connExecute(sql)
 
 class TabelBarang(Resource):
 	def get(self):
@@ -97,7 +92,7 @@ class TabelBarang(Resource):
 		table_list = connExecute(sql);
 		list_data  = []
 		for data in table_list:
-			table_data = tbl(data['barang_id'])
+			table_data = Table(data['barang_id'])
 			table_data.add_field_badge(data['kategori_nama'].title())
 			table_data.add_field_text(data['barang_nama'].title())
 			table_data.add_field_text(data['merek_nama'].title())
@@ -107,3 +102,19 @@ class TabelBarang(Resource):
 			table_data.add_field_text(data['barang_stok_gudang'])
 			list_data.append(table_data.get())	
 		return list_data
+
+class DataBarang(Resource):
+	def get(self, id):
+		sql  = "SELECT `barang_id`,`barang_satuan_grosir` as `barang_satuan`, "
+		sql += "`barang_harga_beli` as `barang_harga` FROM `barang` WHERE `barang_id` = '{}'".format(id) 
+		data = connExecute(sql)
+		data = data[0]
+		print(data)
+		json_data = {
+			'barang_id'     : data['barang_id'],
+			'barang_satuan' : data['barang_satuan'],
+			'barang_jumlah' : 0,
+			'barang_harga'  : data['barang_harga'],
+			'barang_total'  : 0,
+		}
+		return json_data

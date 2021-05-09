@@ -1,13 +1,12 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
 from flask_cors import CORS
 
-from Master.Barang import FormBarang, TabelBarang
+from Master.Barang import FormBarang, TabelBarang, DataBarang
 from Master.Pengguna import FormPengguna, TabelPengguna
 from Master.Pelanggan import FormPelanggan, TabelPelanggan
 from Master.Supplier import FormSupplier, TabelSupplier
-from Pembelian.form import FormPembelian
-from Pembelian.form import TabelPembelian
+from Pembelian.form import FormPembelian, TabelPembelian
 from Pengaturan.Satuan import FormSatuan, TabelSatuan
 from Pengaturan.Kategori import FormKategori, TabelKategori
 from Pengaturan.Merek import FormMerek, TabelMerek
@@ -21,6 +20,7 @@ cors = CORS(app, resources = {r"/*" : { "origin" : "*" }})
 # Master Data [Barang]
 api.add_resource(FormBarang, "/master/barang/form/<string:id>");
 api.add_resource(TabelBarang, "/master/barang/tabel")
+api.add_resource(DataBarang, "/master/barang/data/<string:id>")
 
 # Master Data [Supplier]
 api.add_resource(FormSupplier, "/master/supplier/form/<string:id>");
@@ -35,7 +35,7 @@ api.add_resource(FormPengguna, "/master/pengguna/form/<string:id>");
 api.add_resource(TabelPengguna, "/master/pengguna/tabel")
 
 # Pembelian
-api.add_resource(FormPembelian, "/pembelian/order");
+api.add_resource(FormPembelian, "/pembelian/order/<string:id>");
 api.add_resource(TabelPembelian, "/pembelian")
 
 # Pengaturan [Satuan]
