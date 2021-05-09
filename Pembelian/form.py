@@ -31,7 +31,7 @@ class FormPembelian(Resource):
 		pembelian_total               = int(data['pembelian_total'])
 		pembelian_status              = data['pembelian_status']; 
 
-		sql  = "INSERT INTO `pembelian` SET "
+		sql  = "INSERT INTO `order` SET "
 		sql += "`pembelian_id`                   = '{}',".format(pembelian_id)
 		sql += "`pembelian_supplier_id`          = '{}',".format(pembelian_supplier_id)
 		sql += "`pembelian_tanggal`              = '{}',".format(pembelian_tanggal)
@@ -53,7 +53,7 @@ class FormPembelian(Resource):
 		execs = connExecute(sql)
 
 		# Delete all previous item
-		sql = "DELETE FROM `pembelian_item` WHERE `pembelian_id` = '{}'".format(pembelian_id)
+		sql = "DELETE FROM `order_item` WHERE `pembelian_id` = '{}'".format(pembelian_id)
 		connExecute(sql)
 
 		# Registering all item
@@ -63,6 +63,14 @@ class FormPembelian(Resource):
 			sql += "`barang_jumlah`, `barang_harga`, `barang_total`) "
 			sql += "VALUES ('{}', '{}', '{}', '{}', '{}', '{}')".format(pembelian_id, item['barang_id'], item['barang_satuan'], int(item['barang_jumlah']), int(item['barang_harga']), int(item['barang_total']))
 			connExecute(sql)
+
+			# Update the barang_total to the database
+			if pembelian_status == "ST200":
+				sql  = "UPDATE `barang` "
+				sql += "SET `barang_stok_toko` = `barang_stok_toko` + '{}' ".format(item['barang_jumlah'])
+				sql += "WHERE `barang`.`barang_id` = '{}' ".format(item['barang_id'])
+				connExecute(sql)
+
 		return execs
 
 class TabelPembelian(Resource):
@@ -71,7 +79,7 @@ class TabelPembelian(Resource):
 
 		json_data = {}
 		data_product_sql = ""
-		data_product_sql += "SELECT * FROM `pembelian` as a "
+		data_product_sql += "SELECT * FROM `order` as a "
 		data_product_sql += "INNER JOIN `pembelian_status` as b ON a.pembelian_status = b.pembelian_status_id "
 		data_product_sql += "INNER JOIN `master_supplier` as c ON a.pembelian_supplier_id = c.supplier_id"
 		
