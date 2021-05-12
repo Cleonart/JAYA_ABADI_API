@@ -26,8 +26,8 @@ class FormPengguna(Resource):
 
 		pengguna = form(pengguna_id)
 		pengguna.add_text("Nama Pengguna", "Masukan Nama Pengguna", pengguna_nama)
-		pengguna.add_select("Pilih Posisi Pengguna", "Posisi Pengguna", opt.posisi())
-		pengguna.add_select("Pilih Status Pengguna", "Pilih Status Pengguna", opt.status())
+		pengguna.add_select("Pilih Posisi Pengguna", "Posisi Pengguna", opt.posisi(), pengguna_posisi)
+		pengguna.add_select("Pilih Status Pengguna", "Pilih Status Pengguna", opt.status(), pengguna_status)
 		return pengguna.get()
 
 	def post(self, id):

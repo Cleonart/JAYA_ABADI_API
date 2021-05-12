@@ -82,3 +82,20 @@ class option():
 		for data in temporary_data:
 			json_data[data['satuan_id']] = "{}".format(data['satuan_nama'])	
 		return json_data
+
+	def objectDataPelanggan():
+		json_data = {}
+		temporary_data = connExecute("SELECT * FROM `master_pelanggan`")
+		for data in temporary_data:
+			json_data[data['pelanggan_id']] = "{}".format(data['pelanggan_nama'])	
+		return json_data
+
+	def objectDataPengguna(staffType=None):
+		json_data = {}
+		sql = "SELECT * FROM `pengguna` "
+		if staffType :
+			sql += "WHERE `pengguna_posisi` = '{}' ".format(staffType)
+		temporary_data = connExecute(sql)
+		for data in temporary_data:
+			json_data[data['pengguna_id']] = "{}".format(data['pengguna_nama'])	
+		return json_data

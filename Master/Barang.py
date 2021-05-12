@@ -109,7 +109,7 @@ class DataBarang(Resource):
 		sql += "`barang_harga_beli` as `barang_harga` FROM `barang` WHERE `barang_id` = '{}'".format(id) 
 		data = connExecute(sql)
 		data = data[0]
-		print(data)
+
 		json_data = {
 			'barang_id'     : data['barang_id'],
 			'barang_satuan' : data['barang_satuan'],
@@ -117,4 +117,5 @@ class DataBarang(Resource):
 			'barang_harga'  : data['barang_harga'],
 			'barang_total'  : 0,
 		}
+		
 		return json_data
