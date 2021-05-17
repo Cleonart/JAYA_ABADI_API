@@ -111,7 +111,7 @@ class TabelBarang(Resource):
 			table_data.add_field_text(data['merek_nama'].title())
 			table_data.add_field_price(data['barang_harga_jual'])
 			table_data.add_field_text(str(data['barang_stok_toko']) + " / " + str(data['barang_stok_gudang']))
-			list_data.append(table_data.get())	
+			list_data.append(table_data.get())
 		return list_data
 
 class DataBarang(Resource):

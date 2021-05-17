@@ -5,9 +5,19 @@ from datetime import date
 from Universal.form import form
 from Universal.table import tbl
 
-# Order making version
 class Order(Resource):
-	
+	""" Class [Order]
+		^ Function Mapping
+		
+		* /orders/<string:type> 
+		Mengambil semua order yang terdaftar baik PENJUALAN atau PEMBELIAN
+
+		* /order/<string:id>
+		
+		Kelas untuk menangani masalah order
+		adapun [Order] digunakan oleh
+	"""
+
 	orderTypeMap = {
 		"penjualan" : 200,
 		"pembelian" : 100

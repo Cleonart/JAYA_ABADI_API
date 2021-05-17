@@ -57,5 +57,13 @@ api.add_resource(TabelKategori, "/pengaturan/kategori/tabel")
 api.add_resource(FormMerek, "/pengaturan/merek/form/<string:id>");
 api.add_resource(TabelMerek, "/pengaturan/merek/tabel")
 
+###### Environment for Version 2 ###########################
+from Class.Main import Barang
+
+# Master Barang
+api.add_resource(Barang, '/barang', methods=["GET", "POST"], endpoint="barang")
+api.add_resource(Barang, '/barang/<string:onlyActive>', methods=["GET", "POST"], endpoint="barangOnlyActive")
+api.add_resource(Barang, '/barang/id/<string:id>', methods=["GET","POST","DELETE"], endpoint="barangById")
+
 if __name__ == "__main__":
    app.run(debug=True, host="0.0.0.0")
