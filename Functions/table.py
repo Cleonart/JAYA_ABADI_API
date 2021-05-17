@@ -30,6 +30,12 @@ class table():
 			'text' : text
 		})
 
+	def add_field_badge_warning(self, text=""):
+		self.table_group.append({ 
+			'type' : "badge_warning",  
+			'text' : text
+		})
+
 	def add_field_price(self, text=""):
 		self.table_group.append({
 			'type' : "price",  

@@ -43,7 +43,7 @@ api.add_resource(TabelPembelian, "/pembelian")
 #api.add_resource(Order, "/orders/<string:id>")
 
 api.add_resource(Order, '/orders/<string:type>', methods=["GET"], endpoint="orders")
-api.add_resource(Order, '/order/<id>', methods=["GET", "POST"], endpoint="order")
+api.add_resource(Order, '/order/<string:id>', methods=["GET", "POST"], endpoint="orderGet")
 
 # Pengaturan [Satuan]
 api.add_resource(FormSatuan, "/pengaturan/satuan/form/<string:id>");

@@ -1,6 +1,7 @@
 from functions import Options, Table, generateId
 from flask_restful import Resource,request
 from mysql import connExecute
+from datetime import date
 from Universal.form import form
 from Universal.table import tbl
 
@@ -116,6 +117,17 @@ class Order(Resource):
 		json_data['data_pengguna']  = Options.objectDataPengguna(3001)
 		json_data['data_product']   = Options.objectDataBarang()
 		json_data['data_satuan']    = Options.objectDataSatuan()
+
+		# Get Order Data if exist
+		if id[0:3] == "INV":
+			sql = "SELECT * FROM `order` WHERE `pembelian_id` = '{}' ".format(id)
+			order_data = connExecute(sql)[0]
+
+			sql = "SELECT * FROM `order_item` WHERE `pembelian_id` = '{}'".format(id)
+			order_item = connExecute(sql)
+			order_data['pembelian_item'] = order_item
+			json_data['data_order'] = order_data
+
 		return json_data
 
 	def getOrders(self, type):
@@ -153,8 +165,13 @@ class Order(Resource):
 
 			table_data.add_field_text(pembelian['pembelian_tanggal'] + ' / ' + pembelian['pembelian_tanggal_jatuh_tempo'])
 			
+			# Jatuh Tempo
+			if pembelian['pembelian_tanggal_jatuh_tempo'] == str(date.today()) and pembelian['pembelian_status'] != 'ST200':
+				table_data.add_field_badge_warning("JATUH TEMPO".title())
+				json_data['pembelian_jatuh_tempo'] += pembelian['pembelian_total']
+
 			# Pembelian yang belum dibayar
-			if pembelian['pembelian_status'] == 'ST202':
+			elif pembelian['pembelian_status'] == 'ST202':
 				table_data.add_field_badge_danger(pembelian['pembelian_status_nama'].title())
 				json_data['pembelian_belum_dibayar'] += pembelian['pembelian_total']
 

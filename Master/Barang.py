@@ -42,14 +42,15 @@ class FormBarang(Resource):
 		barang.add_text("Harga Jual", "Masukan Harga Jual", barang_harga_jual)
 
 		if id == "baru":
-			barang.add_text("Stok Awal Toko", "Masukan Stok Awal", "")
-			barang.add_text("Stok Awal Gudang", "Masukan Stok Awal Gudang", "")
+			barang.add_text("Stok Awal Toko", "Masukan Stok Awal", 0)
+			barang.add_text("Stok Awal Gudang", "Masukan Stok Awal Gudang", 0)
 		
 		return barang.get()
 
 	def post(self, id):
 
 		data 				 = request.get_json()
+		print(len(data))
 		barang_id            = data[0]['value']
 		barang_nama          = data[1]['value']
 		barang_kategori      = data[2]['value']
@@ -59,6 +60,10 @@ class FormBarang(Resource):
 		barang_satuan_grosir = data[6]['value']
 		barang_harga_beli    = data[7]['value']
 		barang_harga_jual    = data[8]['value']
+
+		if len(data) > 9:
+			barang_stok_toko     = data[9]['value']
+			barang_stok_gudang   = data[10]['value']
 
 		sql  = "INSERT INTO `barang` SET "
 		sql += "`barang_id`            = '{}',".format(barang_id)
@@ -70,6 +75,10 @@ class FormBarang(Resource):
 		sql += "`barang_satuan_grosir` = '{}',".format(barang_satuan_grosir)
 		sql += "`barang_harga_beli`    = '{}',".format(barang_harga_beli)
 		sql += "`barang_harga_jual`    = '{}'".format(barang_harga_jual)
+		if len(data) > 9:
+			sql += ",`barang_stok_toko`    = '{}',".format(barang_stok_toko)
+			sql += "`barang_stok_gudang`   = '{}'".format(barang_stok_gudang)
+
 		sql += "ON DUPLICATE KEY UPDATE "
 		sql += "`barang_nama`          = '{}',".format(barang_nama.upper())
 		sql += "`barang_kategori`      = '{}',".format(barang_kategori)
@@ -79,6 +88,10 @@ class FormBarang(Resource):
 		sql += "`barang_satuan_grosir` = '{}',".format(barang_satuan_grosir)
 		sql += "`barang_harga_beli`    = '{}',".format(barang_harga_beli)
 		sql += "`barang_harga_jual`    = '{}'".format(barang_harga_jual)
+		if len(data) > 9:
+			sql += ",`barang_stok_toko`    = '{}',".format(barang_stok_toko)
+			sql += "`barang_stok_gudang`   = '{}'".format(barang_stok_gudang)
+
 		return connExecute(sql)
 
 class TabelBarang(Resource):
@@ -94,12 +107,10 @@ class TabelBarang(Resource):
 		for data in table_list:
 			table_data = Table(data['barang_id'])
 			table_data.add_field_badge(data['kategori_nama'].title())
-			table_data.add_field_text(data['barang_nama'].title())
+			table_data.add_field_text(data['barang_nama'].title() + " - " + data['barang_varian'])
 			table_data.add_field_text(data['merek_nama'].title())
-			table_data.add_field_text(data['barang_varian'])
 			table_data.add_field_price(data['barang_harga_jual'])
-			table_data.add_field_text(data['barang_stok_toko'])
-			table_data.add_field_text(data['barang_stok_gudang'])
+			table_data.add_field_text(str(data['barang_stok_toko']) + " / " + str(data['barang_stok_gudang']))
 			list_data.append(table_data.get())	
 		return list_data
 
@@ -117,5 +128,5 @@ class DataBarang(Resource):
 			'barang_harga'  : data['barang_harga'],
 			'barang_total'  : 0,
 		}
-		
+
 		return json_data
