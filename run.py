@@ -2,22 +2,24 @@ from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
 from flask_cors import CORS
 
-from Master.Barang import FormBarang, TabelBarang, DataBarang
-from Master.Pengguna import FormPengguna, TabelPengguna
-from Master.Pelanggan import FormPelanggan, TabelPelanggan
-from Master.Supplier import FormSupplier, TabelSupplier
-from Pembelian.form import FormPembelian, TabelPembelian
-from Class.Main import Order
-from Pengaturan.Satuan import FormSatuan, TabelSatuan
-from Pengaturan.Kategori import FormKategori, TabelKategori
-from Pengaturan.Merek import FormMerek, TabelMerek
+import Master
+
+#from Master.Pengguna import FormPengguna, TabelPengguna
+#from Master.Pelanggan import FormPelanggan, TabelPelanggan
+#from Master.Barang import FormBarang, TabelBarang, DataBarang
+#from Master.Supplier import FormSupplier, TabelSupplier
+#from Pembelian.form import FormPembelian, TabelPembelian
+#from Class.Main import Order
+#from Pengaturan.Satuan import FormSatuan, TabelSatuan
+#from Pengaturan.Kategori import FormKategori, TabelKategori
+#from Pengaturan.Merek import FormMerek, TabelMerek
 
 app = Flask(__name__)
 api = Api(app)
 
 CORS(app)
 cors = CORS(app, resources = {r"/*" : { "origin" : "*" }})
-
+"""
 # Master Data [Barang]
 api.add_resource(FormBarang, "/master/barang/form/<string:id>");
 api.add_resource(TabelBarang, "/master/barang/tabel")
@@ -61,9 +63,16 @@ api.add_resource(TabelMerek, "/pengaturan/merek/tabel")
 from Class.Main import Barang
 
 # Master Barang
+
 api.add_resource(Barang, '/barang', methods=["GET", "POST"], endpoint="barang")
 api.add_resource(Barang, '/barang/<string:onlyActive>', methods=["GET", "POST"], endpoint="barangOnlyActive")
 api.add_resource(Barang, '/barang/id/<string:id>', methods=["GET","POST","DELETE"], endpoint="barangById")
+"""
+
+# Register to The Components
+routes = [Master]
+for route in routes:
+   route.register(api)
 
 if __name__ == "__main__":
    app.run(debug=True, host="0.0.0.0")

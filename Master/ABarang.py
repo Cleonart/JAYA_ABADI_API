@@ -78,7 +78,6 @@ class FormBarang(Resource):
 		if len(data) > 9:
 			sql += ",`barang_stok_toko`    = '{}',".format(barang_stok_toko)
 			sql += "`barang_stok_gudang`   = '{}'".format(barang_stok_gudang)
-
 		sql += "ON DUPLICATE KEY UPDATE "
 		sql += "`barang_nama`          = '{}',".format(barang_nama.upper())
 		sql += "`barang_kategori`      = '{}',".format(barang_kategori)
@@ -91,7 +90,7 @@ class FormBarang(Resource):
 		if len(data) > 9:
 			sql += ",`barang_stok_toko`    = '{}',".format(barang_stok_toko)
 			sql += "`barang_stok_gudang`   = '{}'".format(barang_stok_gudang)
-
+			
 		return connExecute(sql)
 
 class TabelBarang(Resource):
@@ -120,7 +119,7 @@ class DataBarang(Resource):
 		sql += "`barang_harga_beli` as `barang_harga` FROM `barang` WHERE `barang_id` = '{}'".format(id) 
 		data = connExecute(sql)
 		data = data[0]
-
+		
 		json_data = {
 			'barang_id'     : data['barang_id'],
 			'barang_satuan' : data['barang_satuan'],
