@@ -11,7 +11,7 @@ class Master():
 		# Load and distinct key
 		return self.distinctKeys(keysToGet)
 	
-	def dict(self):
+	def data(self):
 		return self.__dict__
 
 	def load(self, load_file):

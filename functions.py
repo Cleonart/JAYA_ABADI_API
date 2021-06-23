@@ -1,7 +1,7 @@
 # Import all microclass for constructing data
 from Functions.form import form
 from Functions.option import option
-from Functions.table import table
+from Functions.Table import Table
 import random
 
 def generateId(appendix):
@@ -11,7 +11,7 @@ class Form(form):
 	""" Form class for constructing form """
 	pass
 
-class Table(table):
+class Table(Table):
 	""" Table class for constructing table """
 	pass
 

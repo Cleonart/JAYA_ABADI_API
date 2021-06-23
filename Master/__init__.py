@@ -1,15 +1,11 @@
-from .interface.BarangInterface import BarangDataInterface
+from .interface.interface_barang import BarangInterface
 from Router import Router
 
 router = Router()
 routes = [
 	{
 		"path" : "master/barang",
-		"children" : [
-			{
-				"path" : 
-			}
-		]
+		"children" : BarangInterface().routes
 	}
 ]
 
