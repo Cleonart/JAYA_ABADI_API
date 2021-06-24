@@ -1,7 +1,7 @@
 from mysql import MysqlController
-from .Controller import Controller
-from functions import Form, Options, generateId
+from .controller import Controller
 from ..models import Barang
+from functions import Form, Options, generateId
 from functions import Table
 
 class ControllerBarang(Controller):
@@ -18,39 +18,24 @@ class ControllerBarang(Controller):
 		""" Function for adding or edit existing data in MySQL Database """
 
 		sql = self.sqlbuilder()
-		sql.insert("barang").set({
-			"barang_id" : "tes",
-			"barang_tes" : "tes"
-		})
-		return sql.build()
-		"""
-		sql  = "INSERT INTO `barang` SET "
-		sql += "`barang_id`            = '{}',".format(barang_id)
-		sql += "`barang_nama`          = '{}',".format(barang_nama.upper())
-		sql += "`barang_kategori`      = '{}',".format(barang_kategori)
-		sql += "`barang_varian`        = '{}',".format(barang_varian.upper())
-		sql += "`barang_merek`         = '{}',".format(barang_merek)
-		sql += "`barang_satuan_eceran` = '{}',".format(barang_satuan_eceran)
-		sql += "`barang_satuan_grosir` = '{}',".format(barang_satuan_grosir)
-		sql += "`barang_harga_beli`    = '{}',".format(barang_harga_beli)
-		sql += "`barang_harga_jual`    = '{}'".format(barang_harga_jual)
-		if len(data) > 9:
-			sql += ",`barang_stok_toko`    = '{}',".format(barang_stok_toko)
-			sql += "`barang_stok_gudang`   = '{}'".format(barang_stok_gudang)
+		fields = {
+			"barang_id" : "123",
+			"barang_nama" : "tes",
+			"barang_kategori" : "tes",
+			"barang_varian" : "te",
+			"barang_merek" : "ts",
+			"barang_satuan_eceran" : "t",
+			"barang_satuan_grosir" : "t",
+			"barang_harga_beli" : 2000,
+			"barang_harga_jual" : 5000
+		}
+		if True:
+			fields['barang_stok_toko'] = 0
+			fields['barang_stok_gudang'] = 0
 
-		sql += "ON DUPLICATE KEY UPDATE "
-		sql += "`barang_nama`          = '{}',".format(barang_nama.upper())
-		sql += "`barang_kategori`      = '{}',".format(barang_kategori)
-		sql += "`barang_varian`        = '{}',".format(barang_varian.upper())
-		sql += "`barang_merek`         = '{}',".format(barang_merek)
-		sql += "`barang_satuan_eceran` = '{}',".format(barang_satuan_eceran)
-		sql += "`barang_satuan_grosir` = '{}',".format(barang_satuan_grosir)
-		sql += "`barang_harga_beli`    = '{}',".format(barang_harga_beli)
-		sql += "`barang_harga_jual`    = '{}'".format(barang_harga_jual)
-		if len(data) > 9:
-			sql += ",`barang_stok_toko`    = '{}',".format(barang_stok_toko
-			sql += "`barang_stok_gudang`   = '{}'".format(barang_stok_gudang))
-		super().query(sql)"""
+		sql.insert("barang").set(fields).on_duplicate_key("barang_id").update(fields)
+		super().query(sql.build())
+		return super().data()
 
 	def form(self, loads=False):
 		""" 
@@ -111,13 +96,16 @@ class ControllerBarang(Controller):
 	def table_with_state(self, state):
 		states = {'active' : 1, 'inactive' : 0}
 		sql = self.sqlbuilder()
-		sql.select("barang", "*").where("`barang_status` = {}".format(states[state]))
+		sql.select("*", "barang").where(f"`barang_status` = {states[state]}")
 		return super().query(sql.build()).data()
 
 	class sqlbuilder():
+		"""
+			When set, id must be at the
+		"""
 
-		sql = None
-		field = None
+		key = None
+		sql = ""
 
 		def __init__(self):
 			self.sql = ""
@@ -126,11 +114,11 @@ class ControllerBarang(Controller):
 			return str(self.sql)
 
 		def insert(self, table_name):
-			self.sql = "INSERT INTO `{}` ".format(table_name)
+			self.sql = f"INSERT INTO `{table_name}` "
 			return self	
 
-		def select(self, _from, _field):
-			self.sql = "SELECT {} FROM `{}` ".format(_field, _from)
+		def select(self, _field, _from):
+			self.sql = f"SELECT {_field} FROM `{_from}` "
 			return self
 
 		def where(self, condition):
@@ -139,17 +127,26 @@ class ControllerBarang(Controller):
 
 		def set(self, field):
 			self.sql += "SET "
-			self.field = []
+			fields = []
 			for key in list(field.keys()):
-				self.field.append("`{}` = '{}'".format(key, field[key]))
-			self.sql += ",".join(self.field)
+				fields.append(f"`{key}` = '{field[key]}'")
+			self.sql += ",".join(fields) + " "
 			return self
 
-		def update_on_duplicate_key(self, field):
-			self.sql += "ON DUPLICATE KEY UPDATE "
-			if field == "*":
-				self.sql += ","
-			pass
+		def on_duplicate_key(self, key):
+			self.sql += "ON DUPLICATE KEY "
+			self.key = key
+			return self
+
+		def update(self, field):
+			self.sql += "UPDATE "
+			fields = []
+			if self.key != None:
+				for key in list(field.keys()):
+					if key != self.key:
+						fields.append(f"`{key}` = '{field[key]}'")
+				self.sql += ",".join(fields)
+			return self
 
 		def build(self):
 			return self.sql
