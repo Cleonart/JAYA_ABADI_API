@@ -21,18 +21,33 @@ class Controller():
                 @route url/<endpoint> when you not provide id, it will fetch all the data
                 @route url/<endpoint>/<id> when id provided, it will fetch specific data
         """
-        mysql_controller = MysqlController()
         sql_builder = SQLBuilder()
 
         if not data_id:
             sql_builder.select("*", self.database_name)
-            mysql_controller.set_sql(sql_builder.build())
-            self.internal_data = mysql_controller.execute()
+            self.internal_data = self.query(sql_builder.build()).data()
             return self
 
         sql_builder.select("*", self.database_name).where(f"`{self.primary_key}` = '{data_id}'")
-        mysql_controller.set_sql(sql_builder.build())
-        self.internal_data = mysql_controller.execute()
+        self.internal_data = self.query(sql_builder.build()).data()
+        self.internal_data = self.internal_data[0] if len(self.internal_data) > 0 else {}
+        return self
+
+    def query_get(self, data_id = False):
+        """ Function for getting data from MySQL Database
+            Output
+                @route url/<endpoint> when you not provide id, it will fetch all the data
+                @route url/<endpoint>/<id> when id provided, it will fetch specific data
+        """
+        sql_builder = SQLBuilder()
+
+        if not data_id:
+            sql_builder.select("*", self.database_name)
+            self.internal_data = self.query(sql_builder.build()).data()
+            return self
+
+        sql_builder.select("*", self.database_name).where(f"`{self.primary_key}` = '{data_id}'")
+        self.internal_data = self.query(sql_builder.build()).data()
         self.internal_data = self.internal_data[0] if len(self.internal_data) > 0 else {}
         return self
 
@@ -64,7 +79,6 @@ class Controller():
     @classmethod
     def trigger_error(cls, error_code):
         """ Function to trigger if an error happened """
-
         codes_dictionary = {
             "DATA_NOT_EXISTS" : {
                 "msg" : "JSON data is not exists! Please make a get() request first",
@@ -77,5 +91,4 @@ class Controller():
                 "success" : False
             }
         }
-
         abort(500, codes_dictionary[error_code])

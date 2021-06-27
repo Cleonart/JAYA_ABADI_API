@@ -87,8 +87,16 @@ class SQLBuilder():
 			self.sql = f"SELECT {_field} FROM `{_from}` "
 			return self
 
+		def inner_join(self, table):
+			self.sql += f"INNER JOIN `{table}` "
+			return self
+
 		def where(self, condition):
 			self.sql += "WHERE {} ".format(condition)
+			return self
+
+		def on(self, condition):
+			self.sql += "ON " + condition
 			return self
 
 		def set(self, field):

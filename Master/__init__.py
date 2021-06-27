@@ -6,17 +6,34 @@
     @route master/pengguna
 """
 
-from Router import Router
-from .interface.interface_barang import InterfaceBarang
+from Mappy.API.interface import MappyInterface
+from Mappy.router import MappyRouter
+from .components.controller_barang import ControllerBarang
+from .components.controller_pelanggan import ControllerPelanggan
 
 # Make instance of interfaces
-interface_barang = InterfaceBarang()
+interface_barang = MappyInterface(ControllerBarang)
+interface_pelanggan = MappyInterface(ControllerPelanggan)
+interface_pengguna = None
+interface_supplier = None
 
-router = Router()
+router = MappyRouter()
 routes = [
     {
         "path" : "master/barang",
         "children" : interface_barang.routes
+    },
+    {
+        "path" : "master/pelanggan",
+        "children" : interface_pelanggan.routes
+    },
+    {
+        "path" : "master/pengguna",
+        "children" : []
+    },
+    {
+        "path" : "master/supplier",
+        "children" : []
     }
 ]
 

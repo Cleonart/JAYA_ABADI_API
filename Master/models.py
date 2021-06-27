@@ -18,6 +18,7 @@ class Master():
 		self.__dict__ = load_file
 		return self
 
+	### Soon end of support ###
 	def distinctKeys(self, keysToGet=[]):
 		arrayData = {}
 		selfData = self.__dict__
@@ -26,18 +27,17 @@ class Master():
 				arrayData[key] = selfData[key]
 		self.__dict__ = arrayData
 		return self
+	### Soon end of support ###
+
+	def get_and_distinct_keys(self, keys=[]):
+		distincted_keys = {}
+		for key in self.__dict__.keys():
+			if key in keys:
+				distincted_keys[key] = self.__dict__[key]
+		self.__dict__ = distincted_keys
+		return self
 
 class Barang(Master):
-
-	barang_id = generateId("B")
-	barang_nama = ""
-	barang_kategori = ""
-	barang_merek = ""
-	barang_varian = ""
-	barang_satuan_eceran = ""
-	barang_satuan_grosir = ""
-	barang_harga_beli = ""
-	barang_harga_jual = ""
 
 	def __init__(self, loads=False):
 		self.barang_id = generateId("B")
@@ -49,6 +49,19 @@ class Barang(Master):
 		self.barang_satuan_grosir = ""
 		self.barang_harga_beli = ""
 		self.barang_harga_jual = ""
+		self.barang_stok_toko = ""
+		self.barang_stok_gudang = ""
+		
+		if loads:
+			self.load(loads)
+
+class Pelanggan(Master):
+
+	def __init__(self, loads=False):
+		self.pelanggan_id = generateId("PEL")
+		self.pelanggan_nama = ""
+		self.pelanggan_alamat = ""
+		self.pelanggan_kontak = ""
 
 		if loads:
 			self.load(loads)
