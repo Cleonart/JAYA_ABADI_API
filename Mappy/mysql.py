@@ -1,19 +1,24 @@
 import pymysql.cursors
 import json
 
-#MYSQL_CONFIGURATION = {
-#	"host" : "localhost",
-#	"user" : "admin",
-#	"password" : "keredsnevets13579",
-#	"database" : "jaya_abadi"
-#}
+def useProduction():
+	return {
+		"host" : "localhost",
+		"user" : "sammy",
+		"password" : "password",
+		"database" : "jaya_abadi"
+	}
 
-MYSQL_CONFIGURATION = {
-	"host" : "localhost",
-	"user" : "sammy",
-	"password" : "password",
-	"database" : "jaya_abadi"
-}
+def useTest():
+	return {
+		"host" : "localhost",
+		"user" : "admin",
+		"password" : "keredsnevets13579",
+		"database" : "jaya_abadi"
+	}
+
+# Mysql Configuration
+MYSQL_CONFIGURATION = useTest()
 
 class MysqlController():
 

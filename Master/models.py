@@ -90,5 +90,17 @@ class Supplier(Master):
 		if loads:
 			self.load(loads)
 
+class Perusahaan(Master):
+
+	def __init__(self, loads=False):
+		self.perusahaan_id = generateId("ENT")
+		self.perusahaan_nama = ""
+		self.perusahaan_alamat = ""
+		self.perusahaan_kontak = ""
+		self.perusahaan_npwp = ""
+
+		if loads:
+			self.load(loads)
+
 class Faktur(Master):
 	pass

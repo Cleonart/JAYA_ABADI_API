@@ -12,12 +12,14 @@ from .components.controller_barang import ControllerBarang
 from .components.controller_pelanggan import ControllerPelanggan
 from .components.controller_pengguna import ControllerPengguna
 from .components.controller_supplier import ControllerSupplier
+from .components.controller_perusahaan import ControllerPerusahaan
 
 # Make instance of interfaces
 interface_barang = MappyInterface(ControllerBarang)
 interface_pelanggan = MappyInterface(ControllerPelanggan)
 interface_pengguna = MappyInterface(ControllerPengguna)
 interface_supplier = MappyInterface(ControllerSupplier)
+interface_perusahaan = MappyInterface(ControllerPerusahaan)
 
 router = MappyRouter()
 routes = [
@@ -36,7 +38,11 @@ routes = [
     {
         "path" : "master/supplier",
         "children" : interface_supplier.routes
-    }
+    },
+    {
+        "path" : "master/perusahaan",
+        "children" : interface_perusahaan.routes
+    },
 ]
 
 def register(api):
