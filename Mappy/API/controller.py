@@ -2,7 +2,7 @@
     Use this controller only when using Mappy Type Format
 """
 
-from mysql import MysqlController, SQLBuilder
+from Mappy.API import MysqlController, SQLBuilder
 from flask import abort
 
 class Controller():
