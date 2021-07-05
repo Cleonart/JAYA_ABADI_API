@@ -18,7 +18,7 @@ def useTest():
 	}
 
 # Mysql Configuration
-MYSQL_CONFIGURATION = useProduction()
+MYSQL_CONFIGURATION = useTest()
 
 class MysqlController():
 

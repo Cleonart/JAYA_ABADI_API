@@ -62,7 +62,9 @@ class option():
 
 	def objectDataSupplier():
 		json_data = {}
-		temporary_data = connExecute("SELECT * FROM `master_supplier` WHERE `supplier_nama` != 'UMUM'")
+		temporary_data = SQLBuilder().select("*", "master_supplier") \
+						.where("`supplier_nama` != 'UMUM'") \
+						.execute()
 		json_data['SUPGENERAL'] = "UMUM"
 		for data in temporary_data:
 			json_data[data['supplier_id']] = "{}".format(data['supplier_nama'].title())
@@ -70,39 +72,36 @@ class option():
 
 	def objectDataBarang():
 		json_data = {}
-		data_product_sql = ""
-		data_product_sql += "SELECT `barang_id`,`barang_nama`,`merek_nama`,`kategori_nama`,`barang_varian` FROM `barang` as a "
-		data_product_sql += "INNER JOIN `merek` as b "
-		data_product_sql += "ON `barang_merek` = `merek_id` "
-		data_product_sql += "INNER JOIN `kategori` as c "
-		data_product_sql += "ON `barang_kategori` = `kategori_id`"
-		data_product_sql += "WHERE `barang_status` = 1"
-		temporary_data    = connExecute(data_product_sql)
+		sql = SQLBuilder().select("*", "barang") \
+			.inner_join("kategori").on("`barang`.barang_kategori = `kategori`.kategori_id") \
+			.inner_join("merek").on("`barang`.barang_merek = `merek`.merek_id") \
+			.where(f"barang.barang_status = '1'").execute()
 		
-		for data in temporary_data:
+		for data in sql:
 			json_data[data['barang_id']] = "[{}] {} - {} {}".format(data['kategori_nama'],data['merek_nama'],data['barang_nama'],data['barang_varian'])
 		return json_data
 	
 	def objectDataSatuan():
 		json_data = {}
-		temporary_data = connExecute("SELECT * FROM `satuan`")
+		temporary_data = SQLBuilder().select("*", "satuan").execute()
 		for data in temporary_data:
 			json_data[data['satuan_id']] = "{}".format(data['satuan_nama'])	
 		return json_data
 
 	def objectDataPelanggan():
 		json_data = {}
-		temporary_data = connExecute("SELECT * FROM `master_pelanggan`")
+		temporary_data = SQLBuilder().select("*", "master_pelanggan").execute()
 		for data in temporary_data:
 			json_data[data['pelanggan_id']] = "{}".format(data['pelanggan_nama'])	
 		return json_data
 
 	def objectDataPengguna(staffType=None):
 		json_data = {}
-		sql = "SELECT * FROM `pengguna` "
+		sql = SQLBuilder().select("*", "pengguna")
 		if staffType :
-			sql += "WHERE `pengguna_posisi` = '{}' ".format(staffType)
-		temporary_data = connExecute(sql)
+			sql = sql.where("`pengguna_posisi` = '{}' ".format(staffType))
+		temporary_data = sql.execute()
+
 		for data in temporary_data:
 			json_data[data['pengguna_id']] = "{}".format(data['pengguna_nama'])	
 		return json_data
