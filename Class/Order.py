@@ -102,7 +102,7 @@ class Order(Resource):
 		# Delete all previous item
 		sql = "DELETE FROM `order_item` WHERE `pembelian_id` = '{}'".format(pembelian_id)
 		connExecute(sql)
-
+		
 		# Registering all item
 		for item in pembelian_item:
 			sql  = "INSERT INTO `order_item` "

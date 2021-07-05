@@ -2,6 +2,9 @@ class Table():
 
 	table = []
 
+	def __init__(self):
+		self.table = []
+
 	def commit_row(self, row):
 		self.table.append(row.data())
 
@@ -13,7 +16,7 @@ class Table():
 		row = []
 
 		def __init__(self):
-			pass
+			self.row = []
 
 		def data(self):
 			return self.row
@@ -33,6 +36,12 @@ class Table():
 		def badge(self, text=""):
 			self.row.append({ 
 				'type' : "badge",  
+				'text' : text
+			})
+
+		def badge_with_class(self, text="", class_=""):
+			self.row.append({
+				'type' : "{}".format(class_),  
 				'text' : text
 			})
 

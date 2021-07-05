@@ -12,24 +12,25 @@ class MappyInterface(MappyRouter):
         Table : Handling All Table for be viewed on Mappy Table UI
         Data : Handling All Data to be pulled from database
     """
-    def __init__(self, api_controller):
+    def __init__(self, api_controller=False):
         """ Initializitaion
             Initalize Controller
         """
         self.router = MappyRouter.__init__
-        self.controller = api_controller()
-        self.routes = [
-            # @route /master/barang
-            self.build_route("", self.Data, str(self.controller) + "data"),
-            # @route /master/barang/<id>
-            self.build_route("<string:data_id>", self.Data, str(self.controller) + "data_get_by_id"),
-            # @route /master/barang/table
-            self.build_route("table", self.Table, str(self.controller) + "tabel"),
-            # @route /master/barang/form
-            self.build_route("form", self.Form, str(self.controller) + "form_create"),
-            # @route /master/barang/form/<id>
-            self.build_route("form/<string:data_id>", self.Form, str(self.controller) + "form_get_by_id")
-        ]
+        if api_controller:
+            self.controller = api_controller()
+            self.routes = [
+                # @route /master/barang
+                self.build_route("", self.Data, str(self.controller) + "data"),
+                # @route /master/barang/<id>
+                self.build_route("<string:data_id>", self.Data, str(self.controller) + "data_get_by_id"),
+                # @route /master/barang/table
+                self.build_route("table", self.Table, str(self.controller) + "tabel"),
+                # @route /master/barang/form
+                self.build_route("form", self.Form, str(self.controller) + "form_create"),
+                # @route /master/barang/form/<id>
+                self.build_route("form/<string:data_id>", self.Form, str(self.controller) + "form_get_by_id")
+            ]
 
     def get_routes(self):
         """ Method for getting all the routes """
@@ -41,6 +42,22 @@ class MappyInterface(MappyRouter):
                                 component=component,\
                                 endpoint=endpoint, \
                                 payload={"controller" : self.controller})
+
+    def set_controller(self, api_controller=False):
+        if api_controller:
+            self.controller = api_controller()
+            self.routes = [
+                # @route /master/barang
+                self.build_route("", self.Data, str(self.controller) + "data"),
+                # @route /master/barang/<id>
+                self.build_route("<string:data_id>", self.Data, str(self.controller) + "data_get_by_id"),
+                # @route /master/barang/table
+                self.build_route("table", self.Table, str(self.controller) + "tabel"),
+                # @route /master/barang/form
+                self.build_route("form", self.Form, str(self.controller) + "form_create"),
+                # @route /master/barang/form/<id>
+                self.build_route("form/<string:data_id>", self.Form, str(self.controller) + "form_get_by_id")
+            ]
 
     class Form(Resource):
         """ Handling Form Interfaces

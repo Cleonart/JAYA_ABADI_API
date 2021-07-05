@@ -15,6 +15,9 @@ class Controller():
         self.database_name = database_name
         self.primary_key = primary_key
 
+    def set(self, setter):
+        self.internal_data = setter
+
     def get(self, data_id = False):
         """ Function for getting data from MySQL Database
             Output

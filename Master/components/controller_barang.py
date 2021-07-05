@@ -42,7 +42,7 @@ class ControllerBarang(Controller):
 		# Forms should be in order
 		form = Form()
 		form.key("barang_id").set_primary_key(data['barang_id'])
-		form.key("barang_nama").text("Nama Barang", "Masukan Nama Barang", data['barang_nama'])
+		form.key("barang_nama").text("Nama Barang", "Masukan Nama Barang", data['barang_nama'].upper())
 		form.key("barang_kategori").select("Kategori", "Masukan Kategori", Options.kategori(), data['barang_kategori'])
 		form.key("barang_merek").select("Merek", "Masukan Nama Merek", Options.merek(), data['barang_merek'])
 		form.key("barang_varian").text("Varian Barang", "Masukan Varian Barang", data['barang_varian'])
@@ -73,11 +73,11 @@ class ControllerBarang(Controller):
 			row = table.Row()
 			row.set_primary_key(data['barang_id'])
 			row.badge(data['kategori_nama'].title())
-			row.text(data['barang_nama'].title() + " - " + data['barang_varian'])
-			row.text(data['merek_nama'].title())
+			row.text(f"{data['merek_nama'].title()} - {data['barang_nama'].title()} - {data['barang_varian']}")
 			row.price(data['barang_harga_jual'])
-			row.text(str(data['barang_stok_toko']) + " / " + str(data['barang_stok_gudang']))
+			row.text(f"{str(data['barang_stok_toko'])} / {str(data['barang_stok_gudang'])}")
 			table.commit_row(row)
+			row = table.Row()
 		return table.data()
 
 	def table_with_state(self, state):

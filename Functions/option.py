@@ -54,12 +54,18 @@ class option():
 		option.append(set_value("Airmadidi", "Airmadidi"))
 		return option
 
+	def objectDataPosisiStok():
+		json_data = {}
+		json_data['toko'] = "Toko"
+		json_data['gudang'] = "Gudang"
+		return json_data
+
 	def objectDataSupplier():
 		json_data = {}
 		temporary_data = connExecute("SELECT * FROM `master_supplier` WHERE `supplier_nama` != 'UMUM'")
 		json_data['SUPGENERAL'] = "UMUM"
 		for data in temporary_data:
-			json_data[data['supplier_id']] = "{}".format(data['supplier_nama'])
+			json_data[data['supplier_id']] = "{}".format(data['supplier_nama'].title())
 		return json_data
 
 	def objectDataBarang():
@@ -70,6 +76,7 @@ class option():
 		data_product_sql += "ON `barang_merek` = `merek_id` "
 		data_product_sql += "INNER JOIN `kategori` as c "
 		data_product_sql += "ON `barang_kategori` = `kategori_id`"
+		data_product_sql += "WHERE `barang_status` = 1"
 		temporary_data    = connExecute(data_product_sql)
 		
 		for data in temporary_data:

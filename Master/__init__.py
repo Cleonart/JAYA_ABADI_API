@@ -10,12 +10,14 @@ from Mappy.API.interface import MappyInterface
 from Mappy.router import MappyRouter
 from .components.controller_barang import ControllerBarang
 from .components.controller_pelanggan import ControllerPelanggan
+from .components.controller_pengguna import ControllerPengguna
+from .components.controller_supplier import ControllerSupplier
 
 # Make instance of interfaces
 interface_barang = MappyInterface(ControllerBarang)
 interface_pelanggan = MappyInterface(ControllerPelanggan)
-interface_pengguna = None
-interface_supplier = None
+interface_pengguna = MappyInterface(ControllerPengguna)
+interface_supplier = MappyInterface(ControllerSupplier)
 
 router = MappyRouter()
 routes = [
@@ -29,11 +31,11 @@ routes = [
     },
     {
         "path" : "master/pengguna",
-        "children" : []
+        "children" : interface_pengguna.routes
     },
     {
         "path" : "master/supplier",
-        "children" : []
+        "children" : interface_supplier.routes
     }
 ]
 

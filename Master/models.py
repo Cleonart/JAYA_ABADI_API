@@ -65,3 +65,30 @@ class Pelanggan(Master):
 
 		if loads:
 			self.load(loads)
+
+class Pengguna(Master):
+	
+	def __init__(self, loads=False):
+		self.pengguna_id = generateId("USR")
+		self.pengguna_nama = ""
+		self.pengguna_posisi = ""
+		self.pengguna_status = ""
+
+		if loads:
+			self.load(loads)
+
+class Supplier(Master):
+
+	def __init__(self, loads=False):
+		self.supplier_id = generateId("USR")
+		self.supplier_nama = ""
+		self.supplier_alamat = ""
+		self.supplier_provinsi = ""
+		self.supplier_kota = ""
+		self.supplier_telepon = ""
+
+		if loads:
+			self.load(loads)
+
+class Faktur(Master):
+	pass
