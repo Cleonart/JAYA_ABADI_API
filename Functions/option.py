@@ -1,10 +1,10 @@
-from mysql import connExecute
+from Mappy.mysql import SQLBuilder
 
 def set_value(label, value):
 	return { 'label' : label,'value' : value }
 
 def get_value(table_name):
-	return connExecute("SELECT * FROM " + table_name)
+	return SQLBuilder().select("*", table_name).execute()
 
 class option():
 
